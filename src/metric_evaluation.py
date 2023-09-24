@@ -35,7 +35,7 @@ def evaluate_iou(image_dir: str, anno_dir: str) -> float:
             true_points_set = set([tuple(x) for x in true_points])
 
             # acquiring predicted mask
-            pred_points = get_foreground_mask(image_path=os.path.join(image_dir, image_name))
+            pred_points, it_time = get_foreground_mask(image_path=os.path.join(image_dir, image_name))
             assert pred_points is not None, 'pred_points is None'
             pred_points_set = set([tuple(x) for x in pred_points])
 
@@ -49,6 +49,7 @@ def evaluate_iou(image_dir: str, anno_dir: str) -> float:
             iou_values = iou_data.get('iou_values', [])
             iou_values.append(iou)
             iou_data['iou_values'] = iou_values
+            iou_data['iter_time'] = it_time
 
         pd.DataFrame(data=iou_data).to_csv('detailed_results.csv')
-        return np.mean(iou_data['iou_values'])
+        return np.mean(iou_data['iou_values']), np.mean(iou_data['iter_time'])
