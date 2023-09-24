@@ -16,7 +16,8 @@ def get_foreground_mask(image_path: str) -> List[tuple]:
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     t1 = time.time()
-    img_edges = canny.get_img_edges(img, 1, 25, 50)
+    threshold = 25
+    img_edges = canny.get_img_edges(img, threshold)
 
     img = np.where(img_edges > 1, 255, 0).astype('uint8')
     pred_points = np.argwhere(img)
